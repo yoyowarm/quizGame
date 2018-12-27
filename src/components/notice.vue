@@ -81,6 +81,15 @@ export default {
     this.$bus.$on('yes', (type) => {
       this.play(type)
     })
+    this.$bus.$on('stop', () => {
+      let playPromise = this.$refs.deda.play()
+      if (playPromise !== undefined) {
+        playPromise.then(_ => {
+          this.$refs.deda.pause()
+          this.$refs.deda.currentTime = 0
+        })
+      }
+    })
   }
 }
 </script>

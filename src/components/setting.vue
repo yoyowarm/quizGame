@@ -14,6 +14,8 @@
                 <label for="Grab">Grab</label>
                 </div>
             </li>
+            <li>first: <input type="text" v-model="firstPlay"></li>
+            <li>second: <input type="text" v-model="secondPlay"></li>
             <li><button @click="confirm">confirm</button></li>
             <li><button @click="init">init</button></li>
         </ul>
@@ -25,7 +27,9 @@ export default {
     return {
       total: 120,
       each: 15,
-      picked: ''
+      picked: '',
+      firstPlay: '',
+      secondPlay: ''
     }
   },
   methods: {
@@ -34,6 +38,8 @@ export default {
       data.total = this.total
       data.each = this.each
       data.picked = this.picked
+      data.firstPlay = this.firstPlay
+      data.secondPlay = this.secondPlay
       this.$store.commit('setting', data)
     },
     init () {
