@@ -7,7 +7,7 @@
         <p v-if="eachfork">{{eachfork}}</p>
         <button v-if="question && !totalfork" @click="reset">cancel</button>
         <button v-if="question && !isStart" @click="startTimer" >start</button>
-        <div v-if="stopCover" class="stopCover"><button v-if="totalfork !== 0" @click="startTimer">restart</button></div>
+        <div v-if="stopCover" class="stopCover"><button v-if="totalfork !== 0" @click="startTimer('nextPlay')">restart</button></div>
     </div>
 </template>
 
@@ -38,9 +38,10 @@ export default {
     reset () {
       this.$store.commit('question', '')
     },
-    startTimer () {
+    startTimer (type) {
       if (!this.totalfork) this.totalfork = Number(this.total)
       if (!this.eachfork) this.eachfork = Number(this.each)
+      if (type === 'nextPlay') this.$bus.$emit('nextPlay')
       this.isStart = true
       this.stopCover = false
       this.totalCount()
@@ -60,7 +61,6 @@ export default {
     },
     eachCount () {
       let vm = this
-      let eachcopy = this.eachfork
 
       this.eachTimer = setInterval(() => {
         vm.eachfork--
@@ -68,7 +68,8 @@ export default {
         if (vm.eachfork === 0) {
           vm.stop()
           vm.$bus.$emit('yes', 'timeup')
-          vm.eachfork = eachcopy
+          vm.$bus.$emit('noanswer')
+          vm.eachfork = Number(vm.each)
         }
       }, 1000)
     },
@@ -79,6 +80,12 @@ export default {
         this.stopCover = true
       } else { this.totalfork = 0; this.eachfork = 0; this.isStart = false }
     }
+  },
+  created () {
+    this.$bus.$on('answer', () => {
+      this.stop()
+      this.eachfork = Number(this.each)
+    })
   }
 }
 </script>

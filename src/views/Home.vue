@@ -4,7 +4,7 @@
     <StartGame/>
     <div @click="view = !view">setting</div>
     <Setting v-if="view"/>
-    <PlayTeam/>
+    <PlayTeam v-if="this.$store.state.picked && this.$store.state.question"/>
     <Sound/>
   </div>
 </template>
@@ -29,6 +29,9 @@ export default {
     return {
       view: false
     }
+  },
+  created () {
+    this.$bus.$on('closeSetting', () => { this.view = false })
   }
 }
 </script>

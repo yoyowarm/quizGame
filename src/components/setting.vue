@@ -14,8 +14,9 @@
                 <label for="Grab">Grab</label>
                 </div>
             </li>
-            <li>first: <input type="text" v-model="firstPlay"></li>
-            <li>second: <input type="text" v-model="secondPlay"></li>
+            <li>first: <input type="text" v-model="oder[0]"></li>
+            <li>second: <input type="text" v-model="oder[1]"></li>
+            <li>third: <input type="text" v-model="oder[2]"></li>
             <li><button @click="confirm">confirm</button></li>
             <li><button @click="init">init</button></li>
         </ul>
@@ -28,8 +29,7 @@ export default {
       total: 120,
       each: 15,
       picked: '',
-      firstPlay: '',
-      secondPlay: ''
+      oder: []
     }
   },
   methods: {
@@ -38,12 +38,13 @@ export default {
       data.total = this.total
       data.each = this.each
       data.picked = this.picked
-      data.firstPlay = this.firstPlay
-      data.secondPlay = this.secondPlay
+      data.oder = this.oder
       this.$store.commit('setting', data)
+      this.$bus.$emit('closeSetting')
     },
     init () {
       this.$store.commit('init')
+      this.$bus.$emit('closeSetting')
     }
   }
 }

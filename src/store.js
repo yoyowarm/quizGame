@@ -10,8 +10,7 @@ export default new Vuex.Store({
     picked: null,
     rounds: [],
     question: '',
-    firstPlay: '',
-    secondPlay: ''
+    oder: []
   },
   mutations: {
     init (state) {
@@ -21,16 +20,15 @@ export default new Vuex.Store({
         picked: null,
         rounds: [],
         question: '',
-        firstPlay: '',
-        secondPlay: ''
+        oder: []
       }
     },
     setting (state, data) {
       if (data.total) state.total = data.total
       if (data.each) state.each = data.each
       if (data.picked) state.picked = data.picked
-      if (data.firstPlay) state.firstPlay = data.firstPlay
-      if (data.secondPlay) state.secondPlay = data.secondPlay
+      if (data.oder) state.oder = data.oder
+
       console.log(state)
     },
     question (state, data) {
