@@ -74,6 +74,21 @@ export default {
         case 'timeup' :
           this.$refs.timeup.play()
           break
+        case 'all' :
+          let playPromise = this.$refs.deda.play()
+          if (playPromise !== undefined) {
+            playPromise.then(_ => {
+              this.$refs.deda.pause()
+              this.$refs.deda.currentTime = 0
+            })
+          }
+          let playPromise2 = this.$refs.timeup.play()
+          if (playPromise2 !== undefined) {
+            playPromise.then(_ => {
+              this.$refs.timeup.pause()
+              this.$refs.timeup.currentTime = 0
+            })
+          }
       }
     }
   },

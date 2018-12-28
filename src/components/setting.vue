@@ -41,6 +41,7 @@ export default {
       data.oder = this.oder
       this.$store.commit('setting', data)
       this.$bus.$emit('closeSetting')
+      this.$bus.$emit('yes', 'all')
     },
     init () {
       this.$store.commit('init')
