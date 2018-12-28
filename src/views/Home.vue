@@ -2,7 +2,7 @@
   <div class="home">
     <Question/>
     <StartGame/>
-    <div @click="view = !view">setting</div>
+    <div @click="view = !view" class="set">❄</div>
     <Setting v-if="view"/>
     <PlayTeam v-if="this.$store.state.picked && this.$store.state.question"/>
     <gameCheckout v-if="this.$store.state.rounds.length > 0 && closeCheckout"/>
@@ -49,5 +49,26 @@ export default {
 
   .home {
     overflow: hidden;
+    background: #e6e622;
+    min-height: 100vh
+  }
+  .set {
+    font-size: 2em;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: #8a8a8a;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color:#fff;
+    line-height: 37px;
+    position: absolute;
+    top: 90px;
+    right: 10px
   }
 </style>

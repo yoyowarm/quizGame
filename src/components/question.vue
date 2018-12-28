@@ -1,8 +1,8 @@
 <template>
-    <div>
-      <input type="text" v-model="question">
-      <button @click="newAProblem">new</button>
-      <button v-if="question" @click="confirm">confirm</button>
+    <div class="question">
+      <input type="text" class="keyin" placeholder="請輸入題目" v-model="question">
+      <button @click="newAProblem">出題</button>
+      <button @click="confirm">確認</button>
     </div>
 </template>
 
@@ -21,12 +21,41 @@ export default {
       this.question = question
     },
     confirm () {
-      this.$store.commit('question', this.question)
-      this.question = ''
+      if (this.question) {
+        this.$store.commit('question', this.question)
+        this.question = ''
+      }
     }
   }
 }
 </script>
 
-<style lang="">
+<style lang="scss">
+.question {
+    background: #fff;
+    text-align: left;
+    width: 90%;
+    margin: 25px auto;
+    padding: 5px;
+    display: flex;
+    justify-content: left;
+    border-radius: 6px;
+    box-shadow: 0px 0px 15px #676767f5;
+    .keyin {
+        flex: 0 0 57%;
+        height: 35px;
+        font-size: 1em;
+        border: 0px;
+        padding: 8px;
+        outline: none
+    }
+    button {
+      flex: 0 0 17%;
+      background: #10c9ef;
+      color: #fff;
+      margin: 4px;
+      border: 0px;
+      border-radius: 5px
+    }
+}
 </style>
