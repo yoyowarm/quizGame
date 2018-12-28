@@ -105,6 +105,10 @@ export default {
         })
       }
     })
+  },
+  beforeDestroy () {
+    this.$bus.$off('yes')
+    this.$bus.$off('stop')
   }
 }
 </script>

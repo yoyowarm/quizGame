@@ -1,5 +1,5 @@
 <template>
-    <div class="teams" :class="{active:currentplayer === 0,active1:currentplayer === 1,active2:currentplayer === 2}">
+    <div class="teams" :class="{active:currentplayer === 0,active1:currentplayer === 1,active2:currentplayer === 2,turn:gameMode}">
         <div class="item" >
             <p>{{teamoder[0]}} </p>
             <button @click="play('yes'),answer('correct',0)" class="correct" :disabled="padding">yes</button>
@@ -27,7 +27,7 @@ export default {
     return {
       answerList: [],
       currentplayer: 0,
-      padding: false
+      padding: true
     }
   },
   computed: {
@@ -47,21 +47,27 @@ export default {
       this.currentplayer = e
       this.padding = true
       let data = {}
+      data.type = this.$store.state.picked
       data.team = this.teamoder[e]
       data.score = (type === 'correct') ? 1 : 0
       this.answerList.push(data)
-      console.log(this.answerList)
     }
   },
   created () {
     this.$bus.$on('noanswer', () => {
       if (this.gameMode) {
         let data = {}
+        data.type = this.$store.state.picked
         data.team = this.teamoder[this.currentplayer]
         data.score = 0
         this.answerList.push(data)
+      } else {
+        let data = {}
+        data.type = this.$store.state.picked
+        data.score = 0
+        data.team = ''
+        this.answerList.push(data)
       }
-      console.log(this.answerList)
     })
     this.$bus.$on('nextPlay', () => {
       if (this.gameMode) {
@@ -73,20 +79,48 @@ export default {
     this.$bus.$on('gameEnd', () => {
       this.padding = false
       this.currentplayer = 0
+      this.$store.commit('checkout', this.answerList)
+      this.$store.commit('nextRound')
+      this.$bus.$emit('checkoutConfirm', true)
     })
+    this.$bus.$on('startGame', () => {
+      this.padding = false
+    })
+  },
+  beforeDestroy () {
+    this.$bus.$off('noanswer')
+    this.$bus.$off('nextPlay')
+    this.$bus.$off('gameEnd')
   }
 }
 </script>
 
 <style lang="scss">
-.teams {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+.teams.turn {
     width: 300vw;
     left: 0px;
     position: relative;
     transition: all 0.3s;
+    .item {
+        button {
+            min-width: 140px;
+        }
+    }
+}
+.teams.turn.active {
+           left: 0x;
+        }
+.teams.turn.active1 {
+        left: -100vw;
+    }
+.teams.turn.active2 {
+        left: -200vw;
+}
+.teams {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
     .item {
         background: #eee;
         width: 100vw;
@@ -94,11 +128,11 @@ export default {
         position: relative;
         button {
             padding: 10px;
-            margin: 10px 10px;
+            margin: 6px 10px;
             border: 0px;
             color: #fff;
             font-size: 1em;
-            min-width: 140px;
+            min-width: 70px;
             border-radius: 10px;
             background: #999;
             &:disabled {background: #d2d2d2}
@@ -108,13 +142,5 @@ export default {
         // .wrong { background: #fd3021}
     }
 }
-.active {
-           left: 0x;
-        }
-    .active1 {
-        left: -100vw;
-    }
-    .active2 {
-        left: -200vw;
-}
+
 </style>

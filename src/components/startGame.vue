@@ -1,15 +1,15 @@
 <template>
     <div>
-        <h2>question:{{question}}</h2>
+        <h2>question:{{question[question.length -1]}}</h2>
         <p v-if="!totalfork">total:{{total}}</p>
         <p v-if="!totalfork">each:{{each}}</p>
         <p v-if="totalfork">{{totalfork}}</p>
         <p v-if="eachfork">{{eachfork}}</p>
         <button v-if="question && !totalfork" @click="reset">cancel</button>
-        <button v-if="question && !isStart" @click="startTimer" >start</button>
+        <button v-if="question && !isStart" @click="startTimer" :disabled="!this.$store.state.total || !this.$store.state.each" >start</button>
         <div v-if="stopCover" class="stopCover">
             <button v-if="totalfork !== 0" @click="startTimer('nextPlay')">restart</button>
-            <button  @click="stop('end')">end{{this.$store.state.picked}}</button>
+            <button  @click="stop('end')">end</button>
         </div>
     </div>
 </template>
@@ -39,12 +39,13 @@ export default {
   },
   methods: {
     reset () {
-      this.$store.commit('question', '')
+      this.$store.commit('question', 'reset')
     },
     startTimer (type) {
       if (!this.totalfork) this.totalfork = Number(this.total)
       if (!this.eachfork) this.eachfork = Number(this.each)
       if (type === 'nextPlay') this.$bus.$emit('nextPlay')
+      this.$bus.$emit('startGame')
       this.isStart = true
       this.stopCover = false
       this.totalCount()
@@ -80,8 +81,7 @@ export default {
       clearInterval(this.eachTimer)
       clearInterval(this.totalTimer)
       if (type === 'end') {
-        this.totalfork = 0; this.eachfork = 0; this.isStart = false; this.stopCover = false
-        this.$bus.$emit('gameEnd')
+        this.totalfork = 0; this.eachfork = 0; this.isStart = false; this.stopCover = false; this.$bus.$emit('gameEnd')
       } else {
         if (this.totalfork !== 0) {
           this.stopCover = true
@@ -94,6 +94,9 @@ export default {
       this.stop()
       this.eachfork = Number(this.each)
     })
+  },
+  beforeDestroy () {
+    this.$bus.$off('answer')
   }
 }
 </script>

@@ -29,7 +29,7 @@ export default {
       total: 120,
       each: 15,
       picked: '',
-      oder: []
+      oder: ['team1', 'team2', 'team3']
     }
   },
   methods: {
