@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.fd54adce46c785826853bbce59996a95.js"
+  "precache-manifest.3bb3982b0786f1aa0a2e0308cf39dec3.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "scroing"});
