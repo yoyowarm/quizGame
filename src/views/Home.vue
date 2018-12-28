@@ -35,3 +35,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+
+  .home {
+    overflow: hidden;
+  }
+</style>

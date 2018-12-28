@@ -7,7 +7,10 @@
         <p v-if="eachfork">{{eachfork}}</p>
         <button v-if="question && !totalfork" @click="reset">cancel</button>
         <button v-if="question && !isStart" @click="startTimer" >start</button>
-        <div v-if="stopCover" class="stopCover"><button v-if="totalfork !== 0" @click="startTimer('nextPlay')">restart</button></div>
+        <div v-if="stopCover" class="stopCover">
+            <button v-if="totalfork !== 0" @click="startTimer('nextPlay')">restart</button>
+            <button  @click="stop('end')">end{{this.$store.state.picked}}</button>
+        </div>
     </div>
 </template>
 
@@ -73,12 +76,17 @@ export default {
         }
       }, 1000)
     },
-    stop () {
+    stop (type) {
       clearInterval(this.eachTimer)
       clearInterval(this.totalTimer)
-      if (this.totalfork !== 0) {
-        this.stopCover = true
-      } else { this.totalfork = 0; this.eachfork = 0; this.isStart = false }
+      if (type === 'end') {
+        this.totalfork = 0; this.eachfork = 0; this.isStart = false; this.stopCover = false
+        this.$bus.$emit('gameEnd')
+      } else {
+        if (this.totalfork !== 0) {
+          this.stopCover = true
+        } else { this.totalfork = 0; this.eachfork = 0; this.isStart = false }
+      }
     }
   },
   created () {
@@ -96,7 +104,11 @@ export default {
     background: rgba(0,0,0,0.6);
     min-height: 50vh;
     width: 100%;
+    height: 100vh;
     top: 0px;
+    z-index: 9;
+    display: flex;
     margin: 0 auto;
+    justify-content: center ;
 }
 </style>
