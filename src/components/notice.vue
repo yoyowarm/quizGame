@@ -39,12 +39,6 @@
             <audio ref="yes06" controls>
                 <source src="../assets/sound/yes/06.wav">
             </audio>
-            <audio ref="yes07" controls>
-                <source src="../assets/sound/yes/07.wav">
-            </audio>
-            <audio ref="yes08" controls>
-                <source src="../assets/sound/yes/08.wav">
-            </audio>
         </div>
         <div class="gamesound">
             <audio ref="deda" controls>
@@ -66,7 +60,7 @@ export default {
           this.$refs[`no0${Math.floor(Math.random() * 6) + 1}`].play()
           break
         case 'yes' :
-          this.$refs[`yes0${Math.floor(Math.random() * 8) + 1}`].play()
+          this.$refs[`yes0${Math.floor(Math.random() * 6) + 1}`].play()
           break
         case 'deda' :
           this.$refs.deda.play()

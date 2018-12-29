@@ -5,13 +5,15 @@
         <p v-if="!totalfork"><span class="Prefix" v-if="!isStart">每回秒數 </span>{{each}}秒</p>
         <p v-if="totalfork"><span class="Prefix" >總秒數</span>{{totalfork}}</p>
         <p v-if="eachfork">倒數{{eachfork}}秒</p>
+        <!-- <p v-if="this.$store.state.picked"><span class="Prefix" >遊戲方式</span> {{picked}}</p> -->
         <div class="btnLine">
           <button v-if="question && !totalfork" @click="reset" style="background:#a0a0a0">取消</button>
           <button v-if="question && !isStart" @click="startTimer" :disabled="!this.$store.state.total || !this.$store.state.each" >開始</button>
+          <button v-if="question && !isStart && this.$store.state.rounds.length > 0" @click="gameover" :disabled="this.$store.state.rounds.length <1" class="gameover" >遊戲結算</button>
         </div>
         <div v-if="stopCover" class="stopCover">
-            <button v-if="totalfork !== 0" @click="startTimer('nextPlay')">下一位</button>
-            <button  @click="stop('end')">回合結束</button>
+            <button v-if="totalfork !== 0" @click="startTimer('nextPlay')" class="nextplay">下一位</button>
+            <button  @click="stop('end')"  class="endofgame" >回合結束</button>
         </div>
     </div>
 </template>
@@ -37,6 +39,9 @@ export default {
     },
     each () {
       return this.$store.state.each
+    },
+    picked () {
+      return (this.$store.state.picked === 'turn')?'輪流作答':'搶答'
     }
   },
   methods: {
@@ -46,12 +51,24 @@ export default {
     startTimer (type) {
       if (!this.totalfork) this.totalfork = Number(this.total)
       if (!this.eachfork) this.eachfork = Number(this.each)
-      if (type === 'nextPlay') this.$bus.$emit('nextPlay')
+      if (type === 'nextPlay') {
+        this.$bus.$emit('nextPlay')
+      } else { this.startGame() }
       this.$bus.$emit('startGame')
       this.isStart = true
       this.stopCover = false
       this.totalCount()
       this.eachCount()
+    },
+    startGame () {
+      let state = this.$store.state
+      let data = {}
+      data.question = this.question[this.question.length - 1]
+      data.type = state.picked
+      data.team1 = 0
+      data.team2 = 0
+      data.team3 = 0
+      this.$store.commit('addRound', data)
     },
     totalCount () {
       let vm = this
@@ -59,7 +76,7 @@ export default {
       this.totalTimer = setInterval(() => {
         vm.totalfork--
         if (vm.totalfork === 0) {
-          vm.stop()
+          vm.stop('end')
           vm.$bus.$emit('yes', 'timeup')
           vm.$bus.$emit('stop')
         }
@@ -89,6 +106,10 @@ export default {
           this.stopCover = true
         } else { this.totalfork = 0; this.eachfork = 0; this.isStart = false }
       }
+    },
+    gameover () {
+      this.$bus.$emit('checkoutConfirm', true)
+      this.$store.commit('gameover', true)
     }
   },
   created () {
@@ -110,6 +131,7 @@ export default {
   margin: 0 auto;
   border-radius: 8px;
   padding: 8px;
+
   h2 {
     margin: 5px auto
   }
@@ -128,6 +150,7 @@ export default {
     font-size: 1.2em;
     padding: 6px 13px;
     margin: 10px;
+    height: 40px;
     color: #fff;
     &:disabled {
       color: graytext
@@ -136,9 +159,11 @@ export default {
 }
 .btnLine {
   display: flex;
+  flex-wrap: wrap;
   button {
     flex: 0 0 44%
   }
+  .gameover {flex: 0 0 95%}
 }
 .stopCover {
     position: absolute;
@@ -152,5 +177,14 @@ export default {
     display: flex;
     margin: 0 auto;
     justify-content: center ;
+    align-items: center;
+    .endofgame {
+      background: #333;
+      border: 1px solid #fff
+    }
+    .nextplay {
+      background: #5e5eff;
+      border: 1px solid #fff
+    }
 }
 </style>

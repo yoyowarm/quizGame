@@ -10,7 +10,8 @@ export default new Vuex.Store({
     picked: null,
     rounds: [],
     question: [],
-    oder: []
+    oder: [],
+    gameover: false
   },
   mutations: {
     init (state) {
@@ -19,7 +20,8 @@ export default new Vuex.Store({
       state.picked = null
       state.rounds = []
       state.question = []
-      state.oder = []
+      state.oder = [],
+      state.gameover = false
     },
     setting (state, data) {
       if (data.total) state.total = data.total
@@ -41,11 +43,21 @@ export default new Vuex.Store({
       state.total = null
       state.each = null
       state.picked = null
-      state.question = []
+      // state.question = []
     },
     checkout (state, data) {
       state.rounds.push(data)
+    },
+    addRound (state, data) {
+      state.rounds.push(data)
       console.log(state.rounds)
+    },
+    bingo (state, e) {
+      state.rounds[state.rounds.length -1][`team${e+1}`] = state.rounds[state.rounds.length -1][`team${e+1}`]+1
+      console.log(state.rounds)
+    },
+    gameover (state, type) {
+      state.gameover = type
     }
   },
   actions: {

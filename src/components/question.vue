@@ -11,7 +11,7 @@ export default {
   data () {
     return {
       question: '',
-      questionBank: ['ss', 'aa', 'cc', 'dd', 'ee', 'ww']
+      questionBank: ['請答出以 “ㄧ” 為開頭的聖經人物', '請回答以 “ㄨ” 為開頭的聖經人物', '請回答以 “ㄏ” 為開頭的聖經人物', '請回答以 “ㄇ” 為開頭的聖經人物']
     }
   },
   methods: {

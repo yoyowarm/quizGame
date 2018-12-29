@@ -31,7 +31,7 @@ export default {
   data () {
     return {
       view: false,
-      closeCheckout: true
+      closeCheckout: false
     }
   },
   created () {

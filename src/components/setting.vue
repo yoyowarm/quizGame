@@ -33,7 +33,7 @@ export default {
       total: 120,
       each: 15,
       picked: '',
-      oder: ['team1', 'team2', 'team3']
+      oder: ['第一小組', '第二小組', '第三小組']
     }
   },
   methods: {
